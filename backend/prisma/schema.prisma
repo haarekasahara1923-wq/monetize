@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  INFLUENCER
+  BUSINESS
+  ADMIN
+}
+
+enum DealStatus {
+  SUGGESTED
+  NEGOTIATING
+  ACCEPTED
+  ACTIVE
+  COMPLETED
+  DISPUTED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD
+  RELEASED
+  REFUNDED
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  role          Role
+  isVerified    Boolean   @default(false)
+  verificationToken String?
+  
+  // Base Fields
+  name          String
+  phone         String?
+  whatsapp      String?
+  city          String?
+  state         String?
+  
+  // Influencer specific
+  bio           String?   
+  achievements  String?
+  
+  // Business specific
+  businessName  String?
+  ownerName     String?
+  address       String?
+  targetLocation String?
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  platformStats PlatformStats[]
+  campaigns     Campaign[]
+  deals         Deal[]      @relation("InfluencerDeals")
+  businessDeals Deal[]      @relation("BusinessDeals")
+}
+
+model PlatformStats {
+  id            String    @id @default(uuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id])
+  platform      String    @map("platform_name") // YouTube, Instagram, Facebook
+  
+  followers     Int       @default(0)
+  avgViews      Int       @default(0)
+  avgLikes      Int       @default(0)
+  avgComments   Int       @default(0)
+  
+  @@unique([userId, platform])
+}
+
+model Campaign {
+  id            String    @id @default(uuid())
+  businessId    String
+  business      User      @relation(fields: [businessId], references: [id])
+  
+  title         String
+  budget        Float
+  platform      String
+  description   String
+  location      String
+  durationDays  Int
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  deals         Deal[]
+}
+
+model Deal {
+  id              String      @id @default(uuid())
+  campaignId      String?
+  campaign        Campaign?   @relation(fields: [campaignId], references: [id])
+  
+  influencerId    String
+  influencer      User        @relation("InfluencerDeals", fields: [influencerId], references: [id])
+  
+  businessId      String
+  business        User        @relation("BusinessDeals", fields: [businessId], references: [id])
+
+  proposedPrice   Float
+  finalPrice      Float?
+  status          DealStatus  @default(SUGGESTED)
+  
+  contractUrl     String?     
+  
+  paymentStatus   PaymentStatus @default(PENDING)
+  razorpayOrderId String?
+  razorpayPaymentId String?
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
