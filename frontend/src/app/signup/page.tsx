@@ -10,6 +10,8 @@ import { useAuth } from '@/store/useAuth';
 import axios from 'axios';
 import { User, Briefcase } from 'lucide-react';
 
+import { Suspense } from 'react';
+
 const baseSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(6, 'Password must be at least 6 characters'),
@@ -19,7 +21,7 @@ const baseSchema = z.object({
 
 type SignupFormValues = z.infer<typeof baseSchema>;
 
-const SignupPage = () => {
+const SignupFormContent = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -190,6 +192,14 @@ const SignupPage = () => {
         </div>
       </motion.div>
     </div>
+  );
+};
+
+const SignupPage = () => {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center italic text-zinc-400">Loading signup...</div>}>
+      <SignupFormContent />
+    </Suspense>
   );
 };
 
