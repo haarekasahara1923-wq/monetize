@@ -8,6 +8,7 @@ import {
   Building2, Package, Save, LayoutDashboard
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const BusinessDashboard = () => {
   const { user } = useAuth();
@@ -33,8 +34,40 @@ const BusinessDashboard = () => {
   useEffect(() => {
     if (!user) {
       router.push('/login');
+      return;
     }
+    fetchProfile();
   }, [user, router]);
+
+  const fetchProfile = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+      const response = await axios.get(`${apiUrl}/users/${user?.id}`);
+      const data = response.data;
+      
+      setFormData({
+        businessName: data.businessName || '',
+        authorityName: data.authorityName || '',
+        targetArea: data.targetLocation || '',
+        pincode: data.pincode || '',
+        address: data.address || '',
+        mobile: data.phone || '',
+        whatsapp: data.whatsapp || '',
+        email: data.email || '',
+        bio: data.bio || '',
+        image: data.image || null,
+      });
+
+      if (data.dealingProducts) {
+        const pList = data.dealingProducts.split(';').map((p: string) => p.trim());
+        const padded = [...pList, '', '', '', '', ''].slice(0, 5);
+        setProducts(padded);
+      }
+    } catch (err) {
+      console.error('Failed to fetch profile', err);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -60,12 +93,34 @@ const BusinessDashboard = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: API call to save business profile
-    setTimeout(() => {
+    
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+      
+      const productsString = products.filter(p => p.trim()).join('; ');
+
+      await axios.patch(`${apiUrl}/users/${user?.id}`, {
+        businessName: formData.businessName,
+        authorityName: formData.authorityName,
+        targetLocation: formData.targetArea,
+        pincode: formData.pincode,
+        address: formData.address,
+        phone: formData.mobile,
+        whatsapp: formData.whatsapp,
+        bio: formData.bio,
+        image: formData.image,
+        dealingProducts: productsString
+      });
+
       setSaved(true);
-      setLoading(false);
       setTimeout(() => setSaved(false), 3000);
-    }, 1500);
+    } catch (err) {
+      console.error('Save failed', err);
+      alert('Failed to save profile. Please check console.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!user) return null;

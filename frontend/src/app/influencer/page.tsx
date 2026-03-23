@@ -9,6 +9,7 @@ import {
   PhoneCall, Video, LayoutDashboard
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 const platforms = [
   { name: 'Instagram', icon: Instagram },
@@ -48,8 +49,46 @@ const InfluencerDashboard = () => {
   useEffect(() => {
     if (!user) {
       router.push('/login');
+      return;
     }
+    fetchProfile();
   }, [user, router]);
+
+  const fetchProfile = async () => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+      const response = await axios.get(`${apiUrl}/users/${user?.id}`);
+      const data = response.data;
+      
+      setFormData({
+        name: data.name || '',
+        address: data.address || '',
+        pincode: data.pincode || '',
+        mobile: data.phone || '',
+        whatsapp: data.whatsapp || '',
+        email: data.email || '',
+        bio: data.bio || '',
+        niche: data.niche || '',
+        image: data.image || null,
+      });
+
+      if (data.platformStats) {
+        const statsObj: any = {};
+        data.platformStats.forEach((s: any) => {
+          statsObj[s.platform] = {
+            followers: s.followers,
+            views: s.avgViews,
+            likes: s.avgLikes,
+            comments: s.avgComments,
+          };
+        });
+        setMetrics(statsObj);
+      }
+    } catch (err) {
+      console.error('Failed to fetch profile', err);
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -79,12 +118,38 @@ const InfluencerDashboard = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: API call to save profile
-    setTimeout(() => {
+    
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+      
+      const statsArray = Object.entries(metrics).map(([platform, m]: [string, any]) => ({
+        platform,
+        followers: Number(m.followers || 0),
+        avgViews: Number(m.views || 0),
+        avgLikes: Number(m.likes || 0),
+        avgComments: Number(m.comments || 0),
+      }));
+
+      await axios.patch(`${apiUrl}/users/${user?.id}`, {
+        phone: formData.mobile,
+        whatsapp: formData.whatsapp,
+        address: formData.address,
+        pincode: formData.pincode,
+        bio: formData.bio,
+        niche: formData.niche,
+        image: formData.image,
+        platformStats: statsArray
+      });
+
       setSaved(true);
-      setLoading(false);
       setTimeout(() => setSaved(false), 3000);
-    }, 1500);
+    } catch (err) {
+      console.error('Save failed', err);
+      alert('Failed to save profile. Please check console.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (!user) return null;

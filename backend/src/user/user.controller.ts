@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Patch, Body } from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('users')
@@ -27,5 +27,10 @@ export class UserController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
+  }
+
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() data: any) {
+    return this.userService.update(id, data);
   }
 }

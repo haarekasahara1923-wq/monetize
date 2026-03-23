@@ -7,17 +7,26 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   async findInfluencers(filters: { platform?: string; minFollowers?: number; city?: string }) {
-    return this.prisma.user.findMany({
-      where: {
-        role: Role.INFLUENCER,
-        platformStats: {
-          some: {
-            platform: filters.platform,
-            followers: { gte: filters.minFollowers ?? 0 },
-          },
+    const where: any = {
+      role: Role.INFLUENCER,
+    };
+
+    // Only filter by platformStats when platform or minFollowers is explicitly provided
+    if (filters.platform || filters.minFollowers) {
+      where.platformStats = {
+        some: {
+          ...(filters.platform ? { platform: filters.platform } : {}),
+          ...(filters.minFollowers ? { followers: { gte: filters.minFollowers } } : {}),
         },
-        city: filters.city ? { contains: filters.city, mode: 'insensitive' } : undefined,
-      },
+      };
+    }
+
+    if (filters.city) {
+      where.city = { contains: filters.city, mode: 'insensitive' };
+    }
+
+    return this.prisma.user.findMany({
+      where,
       include: {
         platformStats: true,
       },
@@ -42,6 +51,35 @@ export class UserService {
       include: {
         platformStats: true,
       },
+    });
+  }
+
+  async update(id: string, data: any) {
+    const { platformStats, ...rest } = data;
+
+    // Handle platform stats update if provided
+    if (platformStats && Array.isArray(platformStats)) {
+      // Simple approach: delete all and recreate
+      await this.prisma.platformStats.deleteMany({
+        where: { userId: id }
+      });
+
+      await this.prisma.platformStats.createMany({
+        data: platformStats.map((stat: any) => ({
+          userId: id,
+          platform: stat.platform,
+          followers: parseInt(stat.followers) || 0,
+          avgViews: parseInt(stat.avgViews) || 0,
+          avgLikes: parseInt(stat.avgLikes) || 0,
+          avgComments: parseInt(stat.avgComments) || 0,
+        }))
+      });
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data: rest,
+      include: { platformStats: true }
     });
   }
 }
