@@ -39,7 +39,7 @@ const LoginPage = () => {
       });
       
       setAuth(response.data.user, response.data.access_token);
-      router.push('/dashboard');
+      router.push(response.data.user.role === 'INFLUENCER' ? '/influencer' : '/business');
     } catch (err: any) {
       setError(err?.response?.data?.message || 'Login failed. Please check your credentials.');
     } finally {

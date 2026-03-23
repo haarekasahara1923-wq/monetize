@@ -46,16 +46,20 @@ model User {
   whatsapp      String?
   city          String?
   state         String?
+  pincode       String?
+  image         String?
   
   // Influencer specific
   bio           String?   // Manual + AI
   achievements  String?
+  niche         String?
   
   // Business specific
   businessName  String?
-  ownerName     String?
+  authorityName String?
   address       String?
   targetLocation String?
+  dealingProducts String?   // Multiple products separated by semicolon or comma
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt

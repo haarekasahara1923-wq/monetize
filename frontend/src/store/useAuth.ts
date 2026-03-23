@@ -6,6 +6,8 @@ interface User {
   email: string;
   name: string;
   role: 'INFLUENCER' | 'BUSINESS' | 'ADMIN';
+  phone?: string;
+  businessName?: string;
 }
 
 interface AuthState {
