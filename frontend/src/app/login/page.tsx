@@ -30,7 +30,10 @@ const LoginPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+
+      const response = await axios.post(`${apiUrl}/auth/login`, {
         email: values.email,
         passwordHash: values.password, // backend expects passwordHash as the field name but value is plain password here
       });
