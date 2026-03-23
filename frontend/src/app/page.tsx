@@ -4,6 +4,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Hero from "@/components/Hero";
+import AiPriceCalculator from "@/components/AiPriceCalculator";
 import { 
   User, Building2, PhoneCall, MessageSquare, Video, 
   ChevronRight, MapPin, CheckCircle2, Globe, 
@@ -80,6 +81,7 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen">
       <Hero />
+      <AiPriceCalculator />
 
       {/* ===== INFLUENCER CARDS SECTION ===== */}
       <section className="py-16 px-6">

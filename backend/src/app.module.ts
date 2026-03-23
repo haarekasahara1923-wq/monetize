@@ -10,6 +10,7 @@ import { UserModule } from './user/user.module';
 import { PaymentModule } from './payment/payment.module';
 import { CommonModule } from './common/common.module';
 import { AiModule } from './ai/ai.module';
+import { PricingModule } from './pricing/pricing.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AiModule } from './ai/ai.module';
     PaymentModule,
     CommonModule,
     AiModule,
+    PricingModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

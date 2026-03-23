@@ -85,9 +85,9 @@ export class PaymentService {
     if (deal.paymentStatus !== 'HELD') throw new BadRequestException('Payment not in HELD status');
     if (deal.status !== 'COMPLETED') throw new BadRequestException('Deal not completed yet');
 
-    // Commission logic
-    const commissionRate = 0.10; // 10%
-    const finalPrice = deal.finalPrice || 0;
+    // Commission logic (Prompt: 15% Platform Commission)
+    const commissionRate = 0.15; 
+    const finalPrice = deal.finalPrice || deal.proposedPrice || 0;
     const payoutAmount = finalPrice * (1 - commissionRate);
 
     // In a production environment, you'd use Razorpay Payouts/Route here

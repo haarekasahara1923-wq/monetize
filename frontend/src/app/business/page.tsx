@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Briefcase, User, MapPin, Phone, MessageSquare, 
   Mail, ShoppingBag, Globe, Camera, CheckCircle2, 
-  Building2, Package, Save, LayoutDashboard
+  Building2, Package, Save, LayoutDashboard, Sparkles
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -15,6 +15,7 @@ const BusinessDashboard = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     businessName: user?.businessName || '',
@@ -123,6 +124,26 @@ const BusinessDashboard = () => {
     }
   };
 
+  const generateAiBio = async () => {
+    setAiLoading(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+      const response = await axios.get(`${apiUrl}/ai/bio`, {
+        params: {
+          name: formData.businessName,
+          role: 'BUSINESS',
+          details: products.filter(p => p.trim()).join(', ')
+        }
+      });
+      setFormData(prev => ({ ...prev, bio: response.data.bio }));
+    } catch (err) {
+      console.error('AI Bio generation failed', err);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -222,7 +243,18 @@ const BusinessDashboard = () => {
             </h2>
             <div className="space-y-5">
               <div>
-                <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Brand Bio</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-black uppercase text-zinc-400">Brand Bio</label>
+                  <button 
+                    type="button"
+                    onClick={generateAiBio}
+                    disabled={aiLoading}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase hover:bg-primary hover:text-white transition-all disabled:opacity-50"
+                  >
+                    {aiLoading ? <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /> : <Sparkles className="w-3 h-3 fill-current" />}
+                    Generate with AI
+                  </button>
+                </div>
                 <textarea name="bio" rows={3} required onChange={handleInputChange} value={formData.bio}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800"
                   placeholder="What makes your brand unique..." />

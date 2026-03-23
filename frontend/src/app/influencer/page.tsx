@@ -6,7 +6,7 @@ import {
   User, MapPin, Phone, MessageSquare, Mail, 
   Instagram, Facebook, Youtube, Twitter, Linkedin, 
   Send, Hash, Camera, Globe, CheckCircle2, Save,
-  PhoneCall, Video, LayoutDashboard
+  PhoneCall, Video, LayoutDashboard, Sparkles
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
@@ -31,6 +31,7 @@ const InfluencerDashboard = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [aiLoading, setAiLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: user?.name || '',
@@ -155,6 +156,31 @@ const InfluencerDashboard = () => {
     }
   };
 
+  const generateAiBio = async () => {
+    if (!formData.niche) {
+      alert('Please enter your niche first to generate a better bio!');
+      return;
+    }
+    setAiLoading(true);
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
+      const apiUrl = baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+      const response = await axios.get(`${apiUrl}/ai/bio`, {
+        params: {
+          name: formData.name,
+          role: 'INFLUENCER',
+          niche: formData.niche,
+          details: formData.achievements
+        }
+      });
+      setFormData(prev => ({ ...prev, bio: response.data.bio }));
+    } catch (err) {
+      console.error('AI Bio generation failed', err);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   if (!user) return null;
 
   return (
@@ -240,7 +266,18 @@ const InfluencerDashboard = () => {
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800" placeholder="e.g. Tech, Fashion, Food" />
               </div>
               <div className="md:col-span-2">
-                <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Bio</label>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="block text-xs font-black uppercase text-zinc-400">Bio</label>
+                  <button 
+                    type="button"
+                    onClick={generateAiBio}
+                    disabled={aiLoading}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase hover:bg-primary hover:text-white transition-all disabled:opacity-50"
+                  >
+                    {aiLoading ? <div className="w-3 h-3 border-2 border-primary/30 border-t-primary rounded-full animate-spin" /> : <Sparkles className="w-3 h-3 fill-current" />}
+                    Generate with AI
+                  </button>
+                </div>
                 <textarea name="bio" rows={3} required onChange={handleInputChange} value={formData.bio}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800"
                   placeholder="Tell brands why they should work with you..." />

@@ -55,4 +55,34 @@ Amount: INR ${details.amount} (to be paid via Monetize Connect Escrow).
       `;
     }
   }
+
+  async generateBio(details: { 
+    name: string; 
+    role: 'INFLUENCER' | 'BUSINESS'; 
+    niche?: string; 
+    details?: string; 
+  }) {
+    const prompt = `
+      Create a highly professional, catchy, and engaging short bio (max 3 sentences) for a ${details.role} on an influencer marketplace.
+      Name: ${details.name}
+      ${details.niche ? `Niche/Category: ${details.niche}` : ''}
+      ${details.details ? `Key Accomplishments/Products: ${details.details}` : ''}
+      
+      Make it sound ${details.role === 'INFLUENCER' ? 'creative, authentic, and collaborative' : 'premium, results-oriented, and visionary'}.
+      DO NOT include placeholders like [Name]. Just return the bio text directly.
+    `;
+
+    try {
+      const response = await this.groq.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "llama-3.3-70b-versatile",
+        temperature: 0.8,
+      });
+
+      return response.choices[0].message.content?.trim();
+    } catch (err) {
+      this.logger.error('Failed to generate bio via Groq:', err);
+      return `Experienced ${details.role} ready for meaningful collaborations.`;
+    }
+  }
 }
