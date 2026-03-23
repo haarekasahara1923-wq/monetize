@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, MapPin, Phone, MessageSquare, Mail, 
   Instagram, Facebook, Youtube, Twitter, Linkedin, 
-  Send, Hash, Camera, Globe, CheckCircle2, ChevronRight 
+  Send, Hash, Camera, Globe, CheckCircle2, ChevronRight,
+  PhoneCall, Video
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -259,7 +260,7 @@ const InfluencerProfilePage = () => {
                     {profile.bio}
                   </p>
                   
-                  <div className="w-full grid grid-cols-2 gap-4 mb-8">
+                  <div className="w-full grid grid-cols-2 gap-4 mb-6">
                     <div className="p-3 rounded-2xl bg-zinc-50 dark:bg-zinc-800">
                       <div className="text-xs text-zinc-400 font-bold uppercase">Followers</div>
                       <div className="text-lg font-black text-primary">120K+</div>
@@ -268,6 +269,18 @@ const InfluencerProfilePage = () => {
                       <div className="text-xs text-zinc-400 font-bold uppercase">Engagement</div>
                       <div className="text-lg font-black text-primary">4.8%</div>
                     </div>
+                  </div>
+
+                  <div className="flex gap-2 w-full mb-6">
+                    <button className="flex-1 p-3 rounded-xl bg-green-500/10 text-green-600 hover:bg-green-500 hover:text-white transition-all flex items-center justify-center">
+                      <PhoneCall className="w-4 h-4" />
+                    </button>
+                    <button className="flex-1 p-3 rounded-xl bg-blue-500/10 text-blue-600 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center">
+                      <MessageSquare className="w-4 h-4" />
+                    </button>
+                    <button className="flex-1 p-3 rounded-xl bg-purple-500/10 text-purple-600 hover:bg-purple-500 hover:text-white transition-all flex items-center justify-center">
+                      <Video className="w-4 h-4" />
+                    </button>
                   </div>
 
                   <button className="w-full py-4 rounded-2xl bg-zinc-100 dark:bg-zinc-800 font-bold flex items-center justify-center gap-2 group-hover:bg-primary group-hover:text-white transition-all">
@@ -304,15 +317,13 @@ const InfluencerProfilePage = () => {
                         </div>
                         
                         <div className="space-y-4 text-sm">
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <MapPin className="w-4 h-4" /> {profile.pincode}, {profile.address}
+                          <div className="flex items-center gap-3 text-zinc-500 font-medium">
+                            <MapPin className="w-4 h-4 text-primary" /> Location Verified
                           </div>
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <Phone className="w-4 h-4" /> {profile.mobile}
+                          <div className="flex items-center gap-3 text-zinc-500 font-medium">
+                            <CheckCircle2 className="w-4 h-4 text-green-500" /> Identity Verified
                           </div>
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <Mail className="w-4 h-4" /> {profile.email}
-                          </div>
+                   
                         </div>
                       </div>
 

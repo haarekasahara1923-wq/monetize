@@ -24,6 +24,18 @@ export class UserService {
     });
   }
 
+  async findBusinesses() {
+    return this.prisma.user.findMany({
+      where: { role: Role.BUSINESS },
+    });
+  }
+
+  async findAll() {
+    return this.prisma.user.findMany({
+      include: { platformStats: true }
+    });
+  }
+
   async findOne(id: string) {
     return this.prisma.user.findUnique({
       where: { id },

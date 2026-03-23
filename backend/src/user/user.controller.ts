@@ -14,6 +14,16 @@ export class UserController {
     });
   }
 
+  @Get('all')
+  async findAll() {
+    return this.userService.findAll();
+  }
+
+  @Get('businesses')
+  async findBusinesses() {
+    return this.userService.findBusinesses();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(id);

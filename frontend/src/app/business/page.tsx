@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Briefcase, User, MapPin, Phone, MessageSquare, 
   Mail, ShoppingBag, Globe, Camera, CheckCircle2, 
-  ChevronRight, Building2, Package 
+  ChevronRight, Building2, Package, PhoneCall, Video 
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -235,9 +235,21 @@ const BusinessProfilePage = () => {
                     ))}
                   </div>
 
-                  <p className="text-zinc-500 text-sm line-clamp-3 mb-8 italic">
+                  <p className="text-zinc-500 text-sm line-clamp-3 mb-6 italic">
                     "{profile.bio}"
                   </p>
+
+                  <div className="flex gap-2 w-full mb-6">
+                    <button className="flex-1 p-3 rounded-xl bg-green-500/10 text-green-600 hover:bg-green-500 hover:text-white transition-all flex items-center justify-center">
+                      <PhoneCall className="w-4 h-4" />
+                    </button>
+                    <button className="flex-1 p-3 rounded-xl bg-blue-500/10 text-blue-600 hover:bg-blue-500 hover:text-white transition-all flex items-center justify-center">
+                      <MessageSquare className="w-4 h-4" />
+                    </button>
+                    <button className="flex-1 p-3 rounded-xl bg-purple-500/10 text-purple-600 hover:bg-purple-500 hover:text-white transition-all flex items-center justify-center">
+                      <Video className="w-4 h-4" />
+                    </button>
+                  </div>
 
                   <button className="w-full py-4 rounded-2xl bg-primary text-white font-bold flex items-center justify-center gap-2 shadow-lg shadow-primary/20">
                     View Brand Page <ChevronRight className="w-4 h-4" />
@@ -268,22 +280,12 @@ const BusinessProfilePage = () => {
                            {profile.image ? <img src={profile.image} alt="Logo" className="w-full h-full object-cover" /> : <Building2 className="w-20 h-20 text-zinc-300" />}
                         </div>
                         <h2 className="text-3xl font-black mb-2">{profile.businessName}</h2>
-                        <div className="text-primary font-bold mb-6">
-                           {profile.authorityName}
-                        </div>
-                        
-                        <div className="space-y-4 text-sm">
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <MapPin className="w-4 h-4" /> {profile.pincode}, {profile.address}
+                        <div className="space-y-4 text-sm mt-6">
+                          <div className="flex items-center gap-3 text-zinc-500 font-medium">
+                            <MapPin className="w-4 h-4 text-primary" /> Region: {profile.targetArea}
                           </div>
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <Globe className="w-4 h-4" /> {profile.targetArea}
-                          </div>
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <Phone className="w-4 h-4" /> {profile.mobile}
-                          </div>
-                          <div className="flex items-center gap-3 text-zinc-500">
-                            <Mail className="w-4 h-4" /> {profile.email}
+                          <div className="flex items-center gap-3 text-zinc-500 font-medium">
+                            <Building2 className="w-4 h-4 text-primary" /> Corporate Entity Verified
                           </div>
                         </div>
                       </div>
