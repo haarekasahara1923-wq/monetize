@@ -8,7 +8,7 @@ import {
   User, Building2, PhoneCall, MessageSquare, Video, 
   ChevronRight, MapPin, CheckCircle2, Globe, 
   Eye, Heart, MessageCircle, Users, TrendingUp,
-  Instagram, Youtube, ArrowRight
+  Instagram, Youtube, ArrowRight, Award
 } from 'lucide-react';
 
 export default function Home() {
@@ -207,10 +207,18 @@ export default function Home() {
                 <div className="md:col-span-2 space-y-6">
                   <div>
                     <h3 className="text-sm font-black uppercase tracking-wider text-zinc-400 mb-3">{selectedType === 'BUSINESS' ? 'About the Brand' : 'About'}</h3>
-                    <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed bg-zinc-50 dark:bg-zinc-800/50 p-5 rounded-2xl text-sm">
-                      {selectedProfile.bio || 'Passionate about creating value.'}
+                    <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed bg-zinc-50 dark:bg-zinc-800/50 p-5 rounded-2xl text-sm italic font-medium">
+                      "{selectedProfile.bio || 'Passionate about creating value.'}"
                     </p>
                   </div>
+                  {selectedProfile.achievements && (
+                    <div>
+                      <h3 className="text-sm font-black uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-2"><Award className="w-4 h-4 text-amber-500" /> Key Achievements</h3>
+                      <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed bg-amber-500/5 p-5 rounded-2xl text-sm border border-amber-500/10">
+                        {selectedProfile.achievements}
+                      </p>
+                    </div>
+                  )}
                   {selectedType === 'INFLUENCER' && selectedProfile.platformStats && selectedProfile.platformStats.length > 0 && (
                     <div>
                       <h3 className="text-sm font-black uppercase tracking-wider text-zinc-400 mb-3 flex items-center gap-2"><TrendingUp className="w-4 h-4" /> Social Metrics</h3>

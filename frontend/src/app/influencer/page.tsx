@@ -41,6 +41,7 @@ const InfluencerDashboard = () => {
     email: user?.email || '',
     bio: '',
     niche: '',
+    achievements: '',
     image: null as string | null,
   });
 
@@ -70,6 +71,7 @@ const InfluencerDashboard = () => {
         email: data.email || '',
         bio: data.bio || '',
         niche: data.niche || '',
+        achievements: data.achievements || '',
         image: data.image || null,
       });
 
@@ -138,6 +140,7 @@ const InfluencerDashboard = () => {
         pincode: formData.pincode,
         bio: formData.bio,
         niche: formData.niche,
+        achievements: formData.achievements,
         image: formData.image,
         platformStats: statsArray
       });
@@ -200,17 +203,17 @@ const InfluencerDashboard = () => {
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">WhatsApp Number</label>
-                <input type="text" name="whatsapp" required onChange={handleInputChange}
+                <input type="text" name="whatsapp" required onChange={handleInputChange} value={formData.whatsapp}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Address</label>
-                <input type="text" name="address" required onChange={handleInputChange}
+                <input type="text" name="address" required onChange={handleInputChange} value={formData.address}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800" placeholder="Full address..." />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Pincode</label>
-                <input type="text" name="pincode" required onChange={handleInputChange}
+                <input type="text" name="pincode" required onChange={handleInputChange} value={formData.pincode}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800" placeholder="400001" />
               </div>
             </div>
@@ -233,14 +236,20 @@ const InfluencerDashboard = () => {
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Niche</label>
-                <input type="text" name="niche" required onChange={handleInputChange}
+                <input type="text" name="niche" required onChange={handleInputChange} value={formData.niche}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800" placeholder="e.g. Tech, Fashion, Food" />
               </div>
               <div className="md:col-span-2">
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Bio</label>
-                <textarea name="bio" rows={3} required onChange={handleInputChange}
+                <textarea name="bio" rows={3} required onChange={handleInputChange} value={formData.bio}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800"
                   placeholder="Tell brands why they should work with you..." />
+              </div>
+              <div className="md:col-span-2">
+                <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Achievements</label>
+                <textarea name="achievements" rows={3} required onChange={handleInputChange} value={formData.achievements}
+                  className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-primary outline-none text-sm dark:bg-zinc-800"
+                  placeholder="What have you achieved so far? (e.g. Winner of X award, Worked with Y brand...)" />
               </div>
             </div>
           </div>

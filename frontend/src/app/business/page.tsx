@@ -161,7 +161,7 @@ const BusinessDashboard = () => {
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Authority/Owner Name</label>
-                <input type="text" name="authorityName" required onChange={handleInputChange}
+                <input type="text" name="authorityName" required onChange={handleInputChange} value={formData.authorityName}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800" />
               </div>
               <div>
@@ -175,17 +175,17 @@ const BusinessDashboard = () => {
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Target Area / Region</label>
-                <input type="text" name="targetArea" required onChange={handleInputChange}
+                <input type="text" name="targetArea" required onChange={handleInputChange} value={formData.targetArea}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800" placeholder="Pan India, North India..." />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Pincode</label>
-                <input type="text" name="pincode" required onChange={handleInputChange}
+                <input type="text" name="pincode" required onChange={handleInputChange} value={formData.pincode}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800" placeholder="400001" />
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Full Address</label>
-                <input type="text" name="address" required onChange={handleInputChange}
+                <input type="text" name="address" required onChange={handleInputChange} value={formData.address}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800" placeholder="Full office address..." />
               </div>
             </div>
@@ -204,7 +204,7 @@ const BusinessDashboard = () => {
               </div>
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">WhatsApp Number</label>
-                <input type="text" name="whatsapp" required onChange={handleInputChange}
+                <input type="text" name="whatsapp" required onChange={handleInputChange} value={formData.whatsapp}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800" />
               </div>
               <div className="md:col-span-2">
@@ -223,7 +223,7 @@ const BusinessDashboard = () => {
             <div className="space-y-5">
               <div>
                 <label className="block text-xs font-black uppercase text-zinc-400 mb-2">Brand Bio</label>
-                <textarea name="bio" rows={3} required onChange={handleInputChange}
+                <textarea name="bio" rows={3} required onChange={handleInputChange} value={formData.bio}
                   className="w-full px-4 py-3 rounded-xl border focus:ring-2 focus:ring-purple-500 outline-none text-sm dark:bg-zinc-800"
                   placeholder="What makes your brand unique..." />
               </div>
